@@ -2,11 +2,12 @@ h1 {
   font-size: 42px;
   text-transform: uppercase;
   text-align: center;
+  font-family: "Coiny", sans-serif;
 }
 
-p {
+.fact {
   font-size: 20px;
-  font-family: sans-serif;
+  font-family: "Sono", sans-serif;
   line-height: 1.4;
 }
 
@@ -14,7 +15,8 @@ ul {
   list-style: none;
 }
 
-span {
+.tag {
   font-size: 14px;
   text-transform: uppercase;
+  font-family: "Coiny", sans-serif;
 }
