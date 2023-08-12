@@ -51,9 +51,34 @@ h1 {
   background-color: #44403c;
   margin-bottom: 40px;
   padding: 16px 40px;
-  text-align: center;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  border-radius: 16px;
 }
 
+.fact-form select,
+.fact-form input {
+  border: none;
+  background-color: #78716c;
+  border-radius: 100px;
+  width: 220px;
+  padding: 16px;
+  font-size: 18px;
+  color: inherit;
+}
+
+.fact-form input::placeholder {
+  color: #a8a29e;
+}
+
+.fact-form input:first-child {
+  flex-grow: 1;
+}
+
+.fact-form span {
+  margin-right: 10px;
+}
 .category {
   margin-bottom: 16px;
 }
@@ -68,6 +93,7 @@ h1 {
   align-items: center;
   gap: 24px;
   letter-spacing: -1px;
+  border-radius: 16px;
 }
 
 .vote-buttons {
