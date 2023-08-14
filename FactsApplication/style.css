@@ -29,6 +29,11 @@ body {
   gap: 20px;
 }
 
+@media (max-width: 900px) {
+  .main {
+    grid-template-columns: 1fr;
+  }
+}
 .logo {
   display: flex;
   align-items: center;
@@ -79,6 +84,18 @@ h1 {
 .fact-form span {
   margin-right: 10px;
 }
+
+@media (max-width: 1000px) {
+  .fact-form {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .fact-form select,
+  .fact-form input {
+    width: auto;
+  }
+}
 .category {
   margin-bottom: 16px;
 }
@@ -95,7 +112,13 @@ h1 {
   letter-spacing: -1px;
   border-radius: 16px;
 }
-
+@media (max-width: 1200px) {
+  .fact {
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 12px;
+  }
+}
 .vote-buttons {
   margin-left: auto;
   display: flex;
