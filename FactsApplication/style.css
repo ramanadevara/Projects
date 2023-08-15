@@ -96,6 +96,10 @@ h1 {
     width: auto;
   }
 }
+
+.hidden {
+  display: none;
+}
 .category {
   margin-bottom: 16px;
 }
