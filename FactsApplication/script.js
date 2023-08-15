@@ -11,44 +11,33 @@ fact_button.addEventListener("click", () => {
   }
 })
 
-const initialFacts = [
-  {
-    id: 1,
-    text: "React is being developed by Meta (formerly facebook)",
-    source: "https://opensource.fb.com/",
-    category: "technology",
-    votesInteresting: 24,
-    votesMindblowing: 9,
-    votesFalse: 4,
-    createdIn: 2021,
-  },
-  {
-    id: 2,
-    text: "Millennial dads spend 3 times as much time with their kids than their fathers spent with them. In 1982, 43% of fathers had never changed a diaper. Today, that number is down to 3%",
-    source:
-      "https://www.mother.ly/parenting/millennial-dads-spend-more-time-with-their-kids",
-    category: "society",
-    votesInteresting: 11,
-    votesMindblowing: 2,
-    votesFalse: 0,
-    createdIn: 2019,
-  },
-  {
-    id: 3,
-    text: "Lisbon is the capital of Portugal",
-    source: "https://en.wikipedia.org/wiki/Lisbon",
-    category: "society",
-    votesInteresting: 8,
-    votesMindblowing: 3,
-    votesFalse: 1,
-    createdIn: 2015,
-  },
-]
+//Load facts from database
 
+async function loadFacts() {
+  const res = await fetch(
+    "https://gxuodrypuqpxjsthcafq.supabase.co/rest/v1/facts",
+    {
+      headers: {
+        apikey:
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd4dW9kcnlwdXFweGpzdGhjYWZxIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTE5NzU4MjYsImV4cCI6MjAwNzU1MTgyNn0.bqflSDPylsGreZHQ5Hgdg0FF6RbZOSQO1PuXn2C-rWc",
+        authorization:
+          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd4dW9kcnlwdXFweGpzdGhjYWZxIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTE5NzU4MjYsImV4cCI6MjAwNzU1MTgyNn0.bqflSDPylsGreZHQ5Hgdg0FF6RbZOSQO1PuXn2C-rWc",
+      },
+    }
+  )
+
+  const data = await res.json()
+  createFacts(data)
+}
+
+loadFacts()
+
+//Selecting DOM elements
 facts_list = document.querySelector(".facts-list")
 
 facts_list.innerHTML = ""
 
+//Creating DOM elements
 const createFacts = function (factsList) {
   const factsArray = factsList.map(
     (fact) =>
@@ -73,5 +62,3 @@ const createFacts = function (factsList) {
 
   facts_list.insertAdjacentHTML("afterbegin", factsHtml)
 }
-
-createFacts(initialFacts)
