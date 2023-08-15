@@ -11,6 +11,16 @@ fact_button.addEventListener("click", () => {
   }
 })
 
+const CATEGORIES = [
+  { name: "technology", color: "#3b82f6" },
+  { name: "science", color: "#16a34a" },
+  { name: "finance", color: "#ef4444" },
+  { name: "society", color: "#eab308" },
+  { name: "entertainment", color: "#db2777" },
+  { name: "health", color: "#14b8a6" },
+  { name: "history", color: "#f97316" },
+  { name: "news", color: "#8b5cf6" },
+]
 //Load facts from database
 
 async function loadFacts() {
@@ -37,6 +47,13 @@ facts_list = document.querySelector(".facts-list")
 
 facts_list.innerHTML = ""
 
+const findColor = function (categoryName) {
+  const category = CATEGORIES.find(
+    (cat) => cat.name.toLowerCase() === categoryName.toLowerCase()
+  )
+  return category.color
+}
+
 //Creating DOM elements
 const createFacts = function (factsList) {
   const factsArray = factsList.map(
@@ -52,7 +69,7 @@ const createFacts = function (factsList) {
         >(Source)</a
       >
     </p>
-    <span class="tag" style="background-color: #3b82f6"
+    <span class="tag" style="background-color: ${findColor(fact.category)}"
       >${fact.category}</span
     >
   </li>`
