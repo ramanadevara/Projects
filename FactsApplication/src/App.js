@@ -1,3 +1,4 @@
+import { useState } from "react"
 import "./style.css"
 
 const CATEGORIES = [
@@ -46,6 +47,8 @@ const initialFacts = [
 ]
 
 function App() {
+  let [formHidden, setFormState] = useState(true)
+
   return (
     <>
       <header className='header'>
@@ -54,9 +57,14 @@ function App() {
 
           <h1>Today I learned</h1>
         </div>
-        <button className='btn btn-large btn-fact'>Share a fact</button>
+        <button
+          className='btn btn-large btn-fact'
+          onClick={() => setFormState((formhide) => !formhide)}
+        >
+          {formHidden ? "Share a fact" : "Close"}
+        </button>
       </header>
-      <FactsForm />
+      {formHidden ? null : <FactsForm />}
       <main className='main'>
         <Categories />
         <FactsList />
