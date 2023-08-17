@@ -51,19 +51,7 @@ function App() {
 
   return (
     <>
-      <header className='header'>
-        <div className='logo'>
-          <img src='logo.png' alt='message logo' />
-
-          <h1>Today I learned</h1>
-        </div>
-        <button
-          className='btn btn-large btn-fact'
-          onClick={() => setFormState((formhide) => !formhide)}
-        >
-          {formHidden ? "Share a fact" : "Close"}
-        </button>
-      </header>
+      <Header formHidden={formHidden} setFormState={setFormState} />
       {formHidden ? null : <FactsForm />}
       <main className='main'>
         <Categories />
@@ -73,6 +61,23 @@ function App() {
   )
 }
 
+function Header({ formHidden, setFormState }) {
+  return (
+    <header className='header'>
+      <div className='logo'>
+        <img src='logo.png' alt='message logo' />
+
+        <h1>Today I learned</h1>
+      </div>
+      <button
+        className='btn btn-large btn-fact'
+        onClick={() => setFormState((formhide) => !formhide)}
+      >
+        {formHidden ? "Share a fact" : "Close"}
+      </button>
+    </header>
+  )
+}
 function FactsForm() {
   return <form className='fact-form'>FactsForm</form>
 }
