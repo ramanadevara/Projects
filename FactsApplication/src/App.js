@@ -70,9 +70,46 @@ function FactsForm() {
 }
 
 function Categories() {
-  return <aside> Categories</aside>
+  const catList = []
+
+  initialFacts.forEach((initialFact) => {
+    catList.push(initialFact.category)
+  })
+
+  const catSet = new Set(catList)
+
+  const catUniqueList = [...catSet]
+
+  return (
+    <aside>
+      <ul>
+        <li className='category'>
+          <button className='btn btn-category btn-all-categories'>All</button>
+        </li>
+        {catUniqueList.map((cat) => (
+          <Category category={cat} />
+        ))}
+      </ul>
+    </aside>
+  )
 }
 
+function Category({ category }) {
+  return (
+    <li className='category'>
+      <button
+        className='btn btn-category'
+        style={{
+          "background-color": CATEGORIES.find(
+            (cat) => cat.name.toLowerCase() === category.toLowerCase()
+          ).color,
+        }}
+      >
+        {category}
+      </button>
+    </li>
+  )
+}
 function FactsList() {
   const facts = initialFacts
 
@@ -80,39 +117,44 @@ function FactsList() {
     <section>
       <ul className='facts-list'>
         {facts.map((fact) => (
-          <li className='fact'>
-            <p>
-              {fact.text}
-              <a className='source' href={fact.source} target='_blank'>
-                (Source)
-              </a>
-            </p>
-            <span
-              className='tag'
-              style={{
-                "background-color": CATEGORIES.find(
-                  (cat) =>
-                    cat.name.toLowerCase() === fact.category.toLowerCase()
-                ).color,
-              }}
-            >
-              {fact.category}
-            </span>
-            <div className='vote-buttons'>
-              <button>
-                👍 <strong>{fact.votesInteresting}</strong>
-              </button>
-              <button>
-                🤯 <strong>{fact.votesMindblowing}</strong>
-              </button>
-              <button>
-                ⛔️ <strong>{fact.votesFalse}</strong>
-              </button>
-            </div>
-          </li>
+          <Fact fact={fact} />
         ))}
       </ul>
     </section>
+  )
+}
+
+function Fact({ fact }) {
+  return (
+    <li className='fact'>
+      <p>
+        {fact.text}
+        <a className='source' href={fact.source} target='_blank'>
+          (Source)
+        </a>
+      </p>
+      <span
+        className='tag'
+        style={{
+          "background-color": CATEGORIES.find(
+            (cat) => cat.name.toLowerCase() === fact.category.toLowerCase()
+          ).color,
+        }}
+      >
+        {fact.category}
+      </span>
+      <div className='vote-buttons'>
+        <button>
+          👍 <strong>{fact.votesInteresting}</strong>
+        </button>
+        <button>
+          🤯 <strong>{fact.votesMindblowing}</strong>
+        </button>
+        <button>
+          ⛔️ <strong>{fact.votesFalse}</strong>
+        </button>
+      </div>
+    </li>
   )
 }
 export default App
