@@ -23,6 +23,19 @@ body {
   justify-content: space-between;
 }
 
+.message-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.message-logo {
+  height: 20px;
+  width: 20px;
+}
+
 .main {
   display: grid;
   grid-template-columns: 250px 1fr;

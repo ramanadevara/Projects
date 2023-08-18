@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { message } from "statuses"
 import "./style.css"
 
 const CATEGORIES = [
@@ -47,21 +48,65 @@ const initialFacts = [
 ]
 
 function App() {
-  let [formHidden, setFormState] = useState(true)
+  const [formHidden, setFormState] = useState(true)
+  const [factsList, setFactsList] = useState(initialFacts)
+  const [factPosted, setFactPosted] = useState(false)
+  const [error, setError] = useState(false)
 
   return (
     <>
-      <Header formHidden={formHidden} setFormState={setFormState} />
-      {formHidden ? null : <FactsForm />}
+      <Header
+        formHidden={formHidden}
+        setFormState={setFormState}
+        setFactPosted={setFactPosted}
+      />
+      {factPosted ? (
+        formHidden ? (
+          <Message
+            message='Your fact has been successfully posted'
+            valid={true}
+          />
+        ) : null
+      ) : null}
+
+      {error ? (
+        <Message
+          message='Your fact could not be posted. Please enter all the fields properly'
+          valid={false}
+        />
+      ) : null}
+      {formHidden ? null : (
+        <FactsForm
+          factsList={factsList}
+          setFactsList={setFactsList}
+          setFormState={setFormState}
+          setFactPosted={setFactPosted}
+          setError={setError}
+        />
+      )}
       <main className='main'>
         <Categories />
-        <FactsList />
+        <FactsList factsList={factsList} />
       </main>
     </>
   )
 }
 
-function Header({ formHidden, setFormState }) {
+function Message({ message, valid }) {
+  return (
+    <div className='message-box'>
+      {valid ? (
+        <img className='message-logo' src='right.png' />
+      ) : (
+        <img className='message-logo' src='wrong.png' />
+      )}
+
+      <h3 className='message'>{message}</h3>
+    </div>
+  )
+}
+
+function Header({ formHidden, setFormState, setFactPosted }) {
   return (
     <header className='header'>
       <div className='logo'>
@@ -71,33 +116,54 @@ function Header({ formHidden, setFormState }) {
       </div>
       <button
         className='btn btn-large btn-fact'
-        onClick={() => setFormState((formhide) => !formhide)}
+        onClick={() => {
+          setFormState((formhide) => !formhide)
+          setFactPosted(false)
+        }}
       >
         {formHidden ? "Share a fact" : "Close"}
       </button>
     </header>
   )
 }
-function FactsForm() {
+
+function FactsForm({
+  factsList,
+  setFactsList,
+  setFormState,
+  setFactPosted,
+  setError,
+}) {
   const [text, setText] = useState("")
   const [source, setSource] = useState("")
   const [category, setCategory] = useState("")
 
   const submitForm = (e) => {
     e.preventDefault()
-    const newFact = {
-      id: initialFacts.length,
-      text: { text },
-      source: { source },
-      category: { category },
-      votesInteresting: 0,
-      votesMindblowing: 0,
-      votesFalse: 0,
-      createdIn: 2015,
-    }
 
-    initialFacts.push(newFact)
-    console.log(initialFacts)
+    if (text && source.endsWith(".com") && category) {
+      const newFact = {
+        id: initialFacts.length,
+        text: text,
+        source: source,
+        category: category,
+        votesInteresting: 0,
+        votesMindblowing: 0,
+        votesFalse: 0,
+        createdIn: 2015,
+      }
+
+      setFactsList((factsList) => [newFact, ...factsList])
+      setText("")
+      setSource("")
+      setCategory("")
+      setFormState(true)
+      setFactPosted(true)
+      setError(false)
+      console.log("facts form list", factsList)
+    } else {
+      setError(true)
+    }
   }
   return (
     <form class='fact-form' onSubmit={(e) => submitForm(e)}>
@@ -116,9 +182,9 @@ function FactsForm() {
       />
       <select value={category} onChange={(e) => setCategory(e.target.value)}>
         <option value=''>Choose a category</option>
-        <option value='Technology'>Technology</option>
-        <option value='Science'>Science</option>
-        <option value='Finance'>Finance</option>
+        {CATEGORIES.map((category) => (
+          <option value={category.name}>{category.name}</option>
+        ))}
       </select>
       <button class='btn btn-large'>Post</button>
     </form>
@@ -154,13 +220,12 @@ function Category({ category }) {
     </li>
   )
 }
-function FactsList() {
-  const [factsList, setFac]
-
+function FactsList({ factsList }) {
   return (
     <section>
       <ul className='facts-list'>
-        {facts.map((fact) => (
+        {console.log("Final fact", factsList)}
+        {factsList.map((fact) => (
           <Fact fact={fact} />
         ))}
       </ul>
