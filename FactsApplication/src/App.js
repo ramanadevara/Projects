@@ -79,27 +79,60 @@ function Header({ formHidden, setFormState }) {
   )
 }
 function FactsForm() {
-  return <form className='fact-form'>FactsForm</form>
+  const [text, setText] = useState("")
+  const [source, setSource] = useState("")
+  const [category, setCategory] = useState("")
+
+  const submitForm = (e) => {
+    e.preventDefault()
+    const newFact = {
+      id: initialFacts.length,
+      text: { text },
+      source: { source },
+      category: { category },
+      votesInteresting: 0,
+      votesMindblowing: 0,
+      votesFalse: 0,
+      createdIn: 2015,
+    }
+
+    initialFacts.push(newFact)
+    console.log(initialFacts)
+  }
+  return (
+    <form class='fact-form' onSubmit={(e) => submitForm(e)}>
+      <input
+        type='text'
+        placeholder='Share a fact with the world..'
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+      />
+      <span>{200 - text.length}</span>
+      <input
+        type='text'
+        placeholder='Trustworthy source..'
+        value={source}
+        onChange={(e) => setSource(e.target.value)}
+      />
+      <select value={category} onChange={(e) => setCategory(e.target.value)}>
+        <option value=''>Choose a category</option>
+        <option value='Technology'>Technology</option>
+        <option value='Science'>Science</option>
+        <option value='Finance'>Finance</option>
+      </select>
+      <button class='btn btn-large'>Post</button>
+    </form>
+  )
 }
 
 function Categories() {
-  const catList = []
-
-  initialFacts.forEach((initialFact) => {
-    catList.push(initialFact.category)
-  })
-
-  const catSet = new Set(catList)
-
-  const catUniqueList = [...catSet]
-
   return (
     <aside>
       <ul>
         <li className='category'>
           <button className='btn btn-category btn-all-categories'>All</button>
         </li>
-        {catUniqueList.map((cat) => (
+        {CATEGORIES.map((cat) => (
           <Category category={cat} />
         ))}
       </ul>
@@ -113,18 +146,16 @@ function Category({ category }) {
       <button
         className='btn btn-category'
         style={{
-          "background-color": CATEGORIES.find(
-            (cat) => cat.name.toLowerCase() === category.toLowerCase()
-          ).color,
+          backgroundColor: category.color,
         }}
       >
-        {category}
+        {category.name}
       </button>
     </li>
   )
 }
 function FactsList() {
-  const facts = initialFacts
+  const [factsList, setFac]
 
   return (
     <section>
@@ -149,7 +180,7 @@ function Fact({ fact }) {
       <span
         className='tag'
         style={{
-          "background-color": CATEGORIES.find(
+          backgroundColor: CATEGORIES.find(
             (cat) => cat.name.toLowerCase() === fact.category.toLowerCase()
           ).color,
         }}
