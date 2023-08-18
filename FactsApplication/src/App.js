@@ -53,11 +53,14 @@ function App() {
   const [factsList, setFactsList] = useState([])
   const [factPosted, setFactPosted] = useState(false)
   const [error, setError] = useState(false)
+  const [loading, setLoading] = useState(false)
 
   useEffect(function () {
     async function getFacts() {
+      setLoading(true)
       const { data: facts, error } = await supabase.from("facts").select("*")
       setFactsList(facts)
+      setLoading(false)
     }
 
     getFacts()
@@ -96,12 +99,15 @@ function App() {
       )}
       <main className='main'>
         <Categories />
-        <FactsList factsList={factsList} />
+        {loading ? <Loader /> : <FactsList factsList={factsList} />}
       </main>
     </>
   )
 }
 
+function Loader() {
+  return <h1 className='loading'>Loading...</h1>
+}
 function Message({ message, valid }) {
   return (
     <div className='message-box'>
