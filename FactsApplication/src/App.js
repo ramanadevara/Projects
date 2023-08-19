@@ -114,7 +114,11 @@ function App() {
       )}
       <main className='main'>
         <Categories setCurrentCategory={setCurrentCategory} />
-        {loading ? <Loader /> : <FactsList factsList={factsList} />}
+        {loading ? (
+          <Loader />
+        ) : (
+          <FactsList factsList={factsList} setFactsList={setFactsList} />
+        )}
       </main>
     </>
   )
@@ -252,20 +256,31 @@ function Category({ category, setCurrentCategory }) {
     </li>
   )
 }
-function FactsList({ factsList }) {
+function FactsList({ factsList, setFactsList }) {
   return (
     <section>
       <ul className='facts-list'>
         {console.log("Final fact", factsList)}
         {factsList.map((fact) => (
-          <Fact fact={fact} />
+          <Fact fact={fact} setFactsList={setFactsList} />
         ))}
       </ul>
     </section>
   )
 }
 
-function Fact({ fact }) {
+function Fact({ fact, setFactsList }) {
+  async function handleVote(voteType) {
+    const { data: updatedFact, error } = await supabase
+      .from("facts")
+      .update({ [voteType]: fact[voteType] + 1 })
+      .eq("id", fact.id)
+      .select()
+
+    setFactsList((facts) =>
+      facts.map((f) => (f.id === fact.id ? updatedFact[0] : f))
+    )
+  }
   return (
     <li className='fact'>
       <p>
@@ -285,13 +300,13 @@ function Fact({ fact }) {
         {fact.category}
       </span>
       <div className='vote-buttons'>
-        <button>
+        <button onClick={() => handleVote("votesInteresting")}>
           👍 <strong>{fact.votesInteresting}</strong>
         </button>
-        <button>
+        <button onClick={() => handleVote("votesMindblowing")}>
           🤯 <strong>{fact.votesMindblowing}</strong>
         </button>
-        <button>
+        <button onClick={() => handleVote("votesFalse")}>
           ⛔️ <strong>{fact.votesFalse}</strong>
         </button>
       </div>
