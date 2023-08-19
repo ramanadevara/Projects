@@ -54,17 +54,31 @@ function App() {
   const [factPosted, setFactPosted] = useState(false)
   const [error, setError] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [currentCategory, setCurrentCategory] = useState("all")
+  useEffect(
+    function () {
+      async function getFacts() {
+        setLoading(true)
+        if (currentCategory == "all") {
+          const { data: facts, error } = await supabase
+            .from("facts")
+            .select("*")
+          setFactsList(facts)
+        } else {
+          const { data: facts, error } = await supabase
+            .from("facts")
+            .select("*")
+            .eq("category", currentCategory)
+          setFactsList(facts)
+        }
 
-  useEffect(function () {
-    async function getFacts() {
-      setLoading(true)
-      const { data: facts, error } = await supabase.from("facts").select("*")
-      setFactsList(facts)
-      setLoading(false)
-    }
+        setLoading(false)
+      }
 
-    getFacts()
-  }, [])
+      getFacts()
+    },
+    [currentCategory]
+  )
 
   return (
     <>
@@ -98,7 +112,7 @@ function App() {
         />
       )}
       <main className='main'>
-        <Categories />
+        <Categories setCurrentCategory={setCurrentCategory} />
         {loading ? <Loader /> : <FactsList factsList={factsList} />}
       </main>
     </>
@@ -207,22 +221,27 @@ function FactsForm({
   )
 }
 
-function Categories() {
+function Categories({ setCurrentCategory }) {
   return (
     <aside>
       <ul>
         <li className='category'>
-          <button className='btn btn-category btn-all-categories'>All</button>
+          <button
+            className='btn btn-category btn-all-categories'
+            onClick={() => setCurrentCategory("all")}
+          >
+            All
+          </button>
         </li>
         {CATEGORIES.map((cat) => (
-          <Category category={cat} />
+          <Category category={cat} setCurrentCategory={setCurrentCategory} />
         ))}
       </ul>
     </aside>
   )
 }
 
-function Category({ category }) {
+function Category({ category, setCurrentCategory }) {
   return (
     <li className='category'>
       <button
@@ -230,6 +249,7 @@ function Category({ category }) {
         style={{
           backgroundColor: category.color,
         }}
+        onClick={() => setCurrentCategory(category.name)}
       >
         {category.name}
       </button>
