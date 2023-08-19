@@ -63,6 +63,7 @@ function App() {
           const { data: facts, error } = await supabase
             .from("facts")
             .select("*")
+            .order("created_at", { ascending: false })
           setFactsList(facts)
         } else {
           const { data: facts, error } = await supabase
@@ -168,22 +169,17 @@ function FactsForm({
   const [source, setSource] = useState("")
   const [category, setCategory] = useState("")
 
-  const submitForm = (e) => {
+  async function submitForm(e) {
     e.preventDefault()
 
     if (text && source.endsWith(".com") && category) {
-      const newFact = {
-        id: initialFacts.length,
-        text: text,
-        source: source,
-        category: category,
-        votesInteresting: 0,
-        votesMindblowing: 0,
-        votesFalse: 0,
-        createdIn: 2015,
-      }
+      const { data: newFact, error } = await supabase
+        .from("facts")
+        .insert([{ text: text, source: source, category: category }])
+        .select()
 
-      setFactsList((factsList) => [newFact, ...factsList])
+      console.log("New fact", newFact[0])
+      setFactsList((factsList) => [newFact[0], ...factsList])
       setText("")
       setSource("")
       setCategory("")
